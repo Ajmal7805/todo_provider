@@ -1,10 +1,25 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:todo_provider/addtaskscreen.dart';
+import 'package:todo_provider/modal.dart';
 import 'package:todo_provider/widgets/tasklist.dart';
 
-class Homescreen extends StatelessWidget {
-  const Homescreen({super.key});
+class Homescreen extends StatefulWidget {
+  final Function addtaskcallback;
+  const Homescreen({super.key, required this.addtaskcallback});
+
+  @override
+  State<Homescreen> createState() => _HomescreenState();
+}
+
+class _HomescreenState extends State<Homescreen> {
+  List<Task> tasks = [
+    Task(name: 'Buy milk'),
+    Task(name: 'Buy coffee'),
+    Task(name: 'Buy eggs')
+  ];
+  String? newtasktitle;
 
   @override
   Widget build(BuildContext context) {
@@ -12,52 +27,16 @@ class Homescreen extends StatelessWidget {
       backgroundColor: Colors.lightBlueAccent,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          showModalBottomSheet<void>(
-              context: context,
-              isScrollControlled: true,
-              builder: (BuildContext context) {
-                return SingleChildScrollView(
-                  child: Container(
-                    padding: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).viewInsets.bottom),
-                    color: Color(0xff757575),
-                    child: Container(
-                      padding: EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(20),
-                              topRight: Radius.circular(20))),
-                      child: Column(
-                        children: [
-                          Text(
-                            'Add Tasks',
-                            style: TextStyle(
-                                fontSize: 30, color: Colors.lightBlueAccent),
-                          ),
-                          TextField(
-                            autofocus: true,
-                            textAlign: TextAlign.center,
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          MaterialButton(
-                            onPressed: () {},
-                            color: Colors.lightBlueAccent,
-                            height: 50,
-                            minWidth: double.infinity,
-                            child: Text(
-                              'Add',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                );
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            builder: (context) => AddTaskScreen(addTask: (newTaskTitle) {
+              setState(() {
+                tasks.add(Task(name: newTaskTitle));
               });
+              Navigator.pop(context);
+            }),
+          );
         },
         backgroundColor: Colors.lightBlueAccent,
         child: Icon(
@@ -113,7 +92,7 @@ class Homescreen extends StatelessWidget {
                     topLeft: Radius.circular(20),
                     topRight: Radius.circular(20),
                   )),
-              child: Tasklist(),
+              child: Tasklist(tasks: tasks),
             ),
           )
         ],

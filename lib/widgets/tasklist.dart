@@ -5,8 +5,10 @@ import 'package:todo_provider/modal.dart';
 import 'package:todo_provider/widgets/tasktile.dart';
 
 class Tasklist extends StatefulWidget {
+  final List<Task> tasks;
   const Tasklist({
     super.key,
+    required this.tasks,
   });
 
   @override
@@ -14,28 +16,21 @@ class Tasklist extends StatefulWidget {
 }
 
 class _TasklistState extends State<Tasklist> {
-  List<Task> tasks = [
-    Task(name: 'Buy a milk', isdone: true),
-    Task(name: 'Buy a coffe', isdone: false),
-    Task(name: 'Buy a egg', isdone: true)
-  ];
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        Tasktile(
-          tasktitle: tasks[0].name,
-          ischeck: tasks[0].isdone,
-        ),
-        Tasktile(
-          tasktitle: tasks[1].name,
-          ischeck: tasks[1].isdone,
-        ),
-        Tasktile(
-          tasktitle: tasks[2].name,
-          ischeck: tasks[2].isdone,
-        ),
-      ],
+    return ListView.builder(
+      itemCount: widget.tasks.length,
+      itemBuilder: (context, index) {
+        return Tasktile(
+          tasktitle: widget.tasks[index].name,
+          ischeck: widget.tasks[index].isdone,
+          checkboxcallback: (checkboxstate) {
+            setState(() {
+              widget.tasks[index].toggledone();
+            });
+          },
+        );
+      },
     );
   }
 }
