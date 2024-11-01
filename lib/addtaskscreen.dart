@@ -1,15 +1,17 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_provider/modal/task_data.dart';
 
 class AddTaskScreen extends StatelessWidget {
-  final Function addTask;
-  const AddTaskScreen({super.key, required this.addTask});
+  const AddTaskScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     String? newTaskTitle;
 
     return Container(
+      height: MediaQuery.of(context).size.height / 1.5,
       color: Color(0xff757575),
       child: Container(
         padding: EdgeInsets.all(20),
@@ -38,7 +40,9 @@ class AddTaskScreen extends StatelessWidget {
             SizedBox(height: 10),
             MaterialButton(
               onPressed: () {
-                addTask(newTaskTitle);
+                Provider.of<TaskData>(context, listen: false)
+                    .addTask(newTaskTitle!);
+                Navigator.pop(context);
               },
               color: Colors.lightBlueAccent,
               child: Text(

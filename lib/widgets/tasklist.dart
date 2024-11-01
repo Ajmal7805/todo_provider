@@ -1,33 +1,30 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
-
 import 'package:flutter/material.dart';
-import 'package:todo_provider/modal.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_provider/modal/task_data.dart';
 import 'package:todo_provider/widgets/tasktile.dart';
 
-class Tasklist extends StatefulWidget {
-  final List<Task> tasks;
-  const Tasklist({
-    super.key,
-    required this.tasks,
-  });
+class Tasklist extends StatelessWidget {
+  const Tasklist({super.key});
 
-  @override
-  State<Tasklist> createState() => _TasklistState();
-}
-
-class _TasklistState extends State<Tasklist> {
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: widget.tasks.length,
-      itemBuilder: (context, index) {
-        return Tasktile(
-          tasktitle: widget.tasks[index].name,
-          ischeck: widget.tasks[index].isdone,
-          checkboxcallback: (checkboxstate) {
-            setState(() {
-              widget.tasks[index].toggledone();
-            });
+    return Consumer<TaskData>(
+      builder: (context, taskData, child) {
+        return ListView.builder(
+          itemCount: taskData.taskcount,
+          itemBuilder: (context, index) {
+            final task = taskData.tasks[index];
+            return Tasktile(
+              longpresscallback: () {
+                taskData.deleteTask(task);
+              },
+              tasktitle: task.name,
+              ischeck: task.isdone,
+              checkboxcallback: (checkboxState) {
+                taskData.toggleTaskDone(index);
+              },
+            );
           },
         );
       },

@@ -4,18 +4,22 @@ import 'package:flutter/material.dart';
 class Tasktile extends StatelessWidget {
   final bool ischeck;
   final String tasktitle;
-  final Function(bool?)? checkboxcallback; // Specify the type for the callback
+  final VoidCallback longpresscallback;
+  final ValueChanged<bool?>?
+      checkboxcallback; // Specify the type for the callback
 
   const Tasktile({
     super.key,
     required this.tasktitle,
     required this.ischeck,
     this.checkboxcallback,
+    required this.longpresscallback,
   });
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      onLongPress: longpresscallback,
       title: Text(
         tasktitle,
         style: TextStyle(

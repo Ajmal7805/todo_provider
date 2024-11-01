@@ -1,25 +1,13 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:todo_provider/addtaskscreen.dart';
-import 'package:todo_provider/modal.dart';
+import 'package:todo_provider/modal/task_data.dart';
 import 'package:todo_provider/widgets/tasklist.dart';
 
-class Homescreen extends StatefulWidget {
+class Homescreen extends StatelessWidget {
   final Function addtaskcallback;
   const Homescreen({super.key, required this.addtaskcallback});
-
-  @override
-  State<Homescreen> createState() => _HomescreenState();
-}
-
-class _HomescreenState extends State<Homescreen> {
-  List<Task> tasks = [
-    Task(name: 'Buy milk'),
-    Task(name: 'Buy coffee'),
-    Task(name: 'Buy eggs')
-  ];
-  String? newtasktitle;
 
   @override
   Widget build(BuildContext context) {
@@ -30,12 +18,7 @@ class _HomescreenState extends State<Homescreen> {
           showModalBottomSheet(
             context: context,
             isScrollControlled: true,
-            builder: (context) => AddTaskScreen(addTask: (newTaskTitle) {
-              setState(() {
-                tasks.add(Task(name: newTaskTitle));
-              });
-              Navigator.pop(context);
-            }),
+            builder: (context) => AddTaskScreen(),
           );
         },
         backgroundColor: Colors.lightBlueAccent,
@@ -69,12 +52,13 @@ class _HomescreenState extends State<Homescreen> {
                 Text(
                   'Todoey',
                   style: TextStyle(
-                      fontSize: 50,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
+                    fontSize: 50,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
                 Text(
-                  '12 Tasks',
+                  '${Provider.of<TaskData>(context).taskcount} Tasks',
                   style: TextStyle(fontSize: 18, color: Colors.white),
                 ),
                 SizedBox(
@@ -87,14 +71,15 @@ class _HomescreenState extends State<Homescreen> {
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 20),
               decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
-                  )),
-              child: Tasklist(tasks: tasks),
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
+              ),
+              child: Tasklist(),
             ),
-          )
+          ),
         ],
       ),
     );
